@@ -1,10 +1,21 @@
-import Login from "./pages/Login";
+import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
+import RequestPasswordReset from "./pages/RequestPasswordReset";
 
 export default function App() {
 
-  const isAuthenticated = true;
+  const isAuthenticated = false;
+
+  const pathName = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathName]);
 
   return (
     <>
@@ -14,6 +25,7 @@ export default function App() {
           duration: 3000,
         }}
       />
+
       <Routes>
         <Route path="/"
           element={isAuthenticated ? <Home /> : <Login />}
@@ -25,7 +37,9 @@ export default function App() {
           element={!isAuthenticated ? <Signup /> : <Navigate to="/" replace />}
         />
         <Route path="/verify-email"
-          element={!isAuthenticated ? <VerifyEmail /> : <Navigate to="/" replace />}
+          element={!isAuthenticated
+            // && sessionStorage.getItem("email") 
+            ? <VerifyEmail /> : <Navigate to="/" replace />}
         />
         <Route path="/reset-password"
           element={<ResetPassword />}
@@ -34,7 +48,6 @@ export default function App() {
           element={<RequestPasswordReset />}
         />
       </Routes>
-      <Login />
     </>
   )
 }

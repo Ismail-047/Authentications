@@ -1,30 +1,21 @@
 import React, { useState } from "react";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import { Input, InputPassword } from "../components/Inputs";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 
-export default function Login() {
-
+export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const handleSubmit = async () => {
-        validateForm();
-        if (Object.keys(errors).length > 0) return;
-        setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-            alert("Login attempted! (This is a demo)");
-        }, 2000);
-    };
 
     const handleGoogleAuth = () => {
-        alert("Google authentication would be handled here!");
+        alert("Google signup would be handled here!");
     };
+
     const formSchema = z.object({
 
         email: z.string()
@@ -69,6 +60,17 @@ export default function Login() {
         setErrors(fieldErrors);
     };
 
+    const handleSignup = async () => {
+        validateForm();
+        if (Object.keys(errors).length > 0) return;
+        setIsLoading(true);
+        // Simulate API call
+        setTimeout(() => {
+            setIsLoading(false);
+            alert("Signup attempted! (This is a demo)");
+        }, 2000);
+    };
+
     return (
         <div className="animate-themeAnimationLg min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center p-4 py-10 relative overflow-hidden">
 
@@ -79,26 +81,24 @@ export default function Login() {
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gray-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-500"></div>
             </div>
 
-
-            {/* MAIN LOGIN CONTAINER */}
+            {/* MAIN SIGNUP CONTAINER */}
             <div className="relative z-10 w-full max-w-md">
 
                 {/* GLASSMORPHISM CARD */}
-                <div className="backdrop-blur-lg bg-white/80 border border-gray-200 rounded-3xl p-8 shadow-2xl ">
+                <div className="backdrop-blur-lg bg-white/80 border border-gray-200 rounded-3xl p-8 shadow-2xl">
 
                     {/* HEADER */}
                     <div className="text-center mb-6">
-
                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl mb-2">
-                            <Lock className="w-8 h-8 text-white" />
+                            <User className="w-8 h-8 text-white" />
                         </div>
 
                         <h1 className="text-3xl font-bold text-gray-900 mb-1 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
-                            Welcome Back
+                            Create Account
                         </h1>
 
                         <p className="text-gray-600 text-sm">
-                            Sign in to continue your journey
+                            Join us and start your journey today
                         </p>
 
                     </div>
@@ -115,6 +115,20 @@ export default function Login() {
 
                     </button>
 
+                    {/* TERMS AND CONDITIONS */}
+                    <div className="text-center">
+                        <p className="text-xs text-gray-500 mt-2 ">
+                            By creating an account, you agree to our{" "}
+                            <Link to="/terms-of-service" className="text-gray-700 hover:text-gray-900 underline">
+                                Terms of Service
+                            </Link>
+                            {" "}and{" "}
+                            <Link to="/privacy-policy" className="text-gray-700 hover:text-gray-900 underline">
+                                Privacy Policy
+                            </Link>
+                        </p>
+                    </div>
+
                     {/* DIVIDER */}
                     <div className="mt-7 mb-4 flex items-center">
                         <div className="flex-1 border-t border-gray-300"></div>
@@ -122,7 +136,7 @@ export default function Login() {
                         <div className="flex-1 border-t border-gray-300"></div>
                     </div>
 
-                    {/* LOGIN FORM */}
+                    {/* SIGNUP FORM */}
                     <div className="space-y-3">
 
                         {/* EMAIL */}
@@ -149,19 +163,22 @@ export default function Login() {
                             onBlur={(e) => validateField(e.target.name, e.target.value)}
                         />
 
-                        {/* FORGOT PASSWORD */}
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200 hover:underline"
-                            >
-                                Forgot password?
-                            </button>
-                        </div>
+                        <InputPassword required={true}
+                            label="Confirm Password"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            errors={errors}
+                            icon={<Lock className="h-5 w-5 text-gray-400" />}
+                            placeholder="********"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                        />
 
-                        {/* SIGN IN BUTTON */}
+
+
+                        {/* SIGN UP BUTTON */}
                         <button
-                            onClick={handleSubmit}
+                            onClick={handleSignup}
                             disabled={isLoading}
                             className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group"
                         >
@@ -169,20 +186,20 @@ export default function Login() {
                             {isLoading ? (
                                 <div className="flex items-center justify-center space-x-2">
                                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                    <span>Signing in...</span>
+                                    <span>Creating account...</span>
                                 </div>
                             ) : (
-                                "Sign In"
+                                "Create Account"
                             )}
                         </button>
                     </div>
 
-                    {/* SIGN UP LINK */}
+                    {/* SIGN IN LINK */}
                     <div className="mt-8 text-center">
                         <p className="text-gray-600 text-sm">
-                            Don"t have an account?{" "}
-                            <Link to="/signup" className="text-gray-800 hover:text-gray-900 transition-colors duration-200 hover:underline font-medium">
-                                Sign up
+                            Already have an account?{" "}
+                            <Link to="/login" className="text-gray-800 hover:text-gray-900 transition-colors duration-200 hover:underline font-medium">
+                                Login
                             </Link>
                         </p>
                     </div>
