@@ -7,15 +7,29 @@ import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
+import { useAuthStore } from "./zustand/auth.store";
+import Cookies from "js-cookie";
 
 export default function App() {
 
-  const isAuthenticated = false;
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      checkAuth();
+    }
+  }, [checkAuth]);
 
   const pathName = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathName]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathName]);
+
+  if (isCheckingAuth) return (
+    <div className="h-screen flex items-center flex-col justify-center bg-gray-50">
+      <div className="w-10 h-10 border-t-4 border-b-4 border-gray-900 rounded-full animate-spin"></div>
+      <div className="text-2xl font-bold mt-4">Loading...</div>
+    </div>
+  );
 
   return (
     <>
@@ -28,16 +42,16 @@ export default function App() {
 
       <Routes>
         <Route path="/"
-          element={isAuthenticated ? <Home /> : <Login />}
+          element={authUser ? <Home /> : <Login />}
         />
         <Route path="/login"
-          element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />}
+          element={!authUser ? <Login /> : <Navigate to="/" replace />}
         />
         <Route path="/signup"
-          element={!isAuthenticated ? <Signup /> : <Navigate to="/" replace />}
+          element={!authUser ? <Signup /> : <Navigate to="/" replace />}
         />
         <Route path="/verify-email"
-          element={!isAuthenticated
+          element={!authUser
             // && sessionStorage.getItem("email") 
             ? <VerifyEmail /> : <Navigate to="/" replace />}
         />

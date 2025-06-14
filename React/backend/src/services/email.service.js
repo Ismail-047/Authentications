@@ -1,0 +1,69 @@
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
+
+const verificationEmailTemplate = `
+Dear User,
+Thank you for signing up.
+
+Your verification code is: {{code}}
+
+Please enter this code to complete your verification. This code will expire in 10 minutes.
+If you didn't request this, please ignore this email.
+
+Best regards,
+Support Team
+`;
+
+const resetPasswordEmailTemplate = `
+Dear User,
+
+You requested to reset your password. Click the link below to reset your password:
+
+Reset Password Link: {{resetLink}}
+
+This link will expire in 30 minutes.
+
+If you didn't request this, ignore this email.
+
+Best regards,
+Support Team
+`;
+
+class EmailService {
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.NODEMAILER_EMAIL,
+                pass: process.env.NODEMAILER_PASS,
+            },
+        });
+    }
+
+    async sendVerificationCode(to, code) {
+        const mailOptions = {
+            from: `"Authentication Service" <${process.env.NODEMAILER_EMAIL}>`,
+            to,
+            subject: "Your Verification Code",
+            text: verificationEmailTemplate.replace("{{code}}", code),
+        };
+
+        return await this.transporter.sendMail(mailOptions);
+    }
+
+    async sendResetPasswordEmail(to, resetLink) {
+        const mailOptions = {
+            from: `"Authentication Service" <${process.env.NODEMAILER_EMAIL}>`,
+            to,
+            subject: "Reset Your Password",
+            text: resetPasswordEmailTemplate.replace("{{resetLink}}", resetLink),
+        };
+
+        return await this.transporter.sendMail(mailOptions);
+    }
+}
+
+export default new EmailService();

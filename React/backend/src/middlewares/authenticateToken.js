@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { sendRes } from "../utils/responseHelper.js";
+import { sendRes } from "../utils/responseHelpers.js";
 import { User } from "../models/user.model.js";
-import { logError } from "../utils/comman.utils.js";
+import { consoleError } from "../utils/comman.utils.js";
 
 /**
  * Middleware to authenticate a JSON Web Token (JWT) from cookies.
@@ -30,7 +30,7 @@ export const authenticateToken = (req, res, next) => {
             next();
         })
     } catch (error) {
-        logError("authenticateToken", error);
+        consoleError("authenticateToken (authenticateToken.js)", error);
 
         return sendRes(res, 500, "Internal Server Error.")
     }
