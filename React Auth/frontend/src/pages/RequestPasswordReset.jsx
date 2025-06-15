@@ -3,8 +3,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { Input } from "../components/Inputs";
+import useAuthStore from "../zustand/auth.store";
 import { ThemeButton } from "../components/Buttons";
-import { useAuthStore } from "../zustand/auth.store";
 import { Mail, ArrowLeft, Info, CheckCircle } from "lucide-react";
 
 export default function RequestPasswordReset() {

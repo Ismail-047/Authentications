@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
-import { useAuthStore } from "./zustand/auth.store";
+import useAuthStore from "./zustand/auth.store";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 // PAGES
 import Home from "./pages/Home";

@@ -5,7 +5,7 @@ import { signInWithPopup } from "firebase/auth";
 import { consoleError } from "../utils/comman.utils";
 import { auth, googleProvider } from "../lib/firebase";
 
-export const useAuthStore = create((set) => ({
+const useAuthStore = create((set) => ({
 
     authUser: null,
     setAuthUser: (user) => set({ authUser: user }),
@@ -156,3 +156,5 @@ export const useAuthStore = create((set) => ({
     }
 
 }));
+
+export default useAuthStore;

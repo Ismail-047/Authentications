@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useState, useRef } from "react";
+import useAuthStore from "../zustand/auth.store";
 import { ThemeButton } from "../components/Buttons";
-import { useAuthStore } from "../zustand/auth.store";
 import { Mail, ArrowLeft, CheckCircle, Info } from "lucide-react";
 
 export default function VerifyEmail() {
