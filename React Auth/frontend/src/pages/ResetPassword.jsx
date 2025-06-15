@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Lock, Check, ArrowLeft, CheckCircle } from "lucide-react";
 import { z } from "zod";
+import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 import { ThemeButton } from "../components/Buttons";
 import { InputPassword } from "../components/Inputs";
-import toast from "react-hot-toast";
 import { useAuthStore } from "../zustand/auth.store";
 import { Link, useNavigate } from "react-router-dom";
+import { Lock, ArrowLeft, CheckCircle } from "lucide-react";
 
 export default function ResetPassword() {
 

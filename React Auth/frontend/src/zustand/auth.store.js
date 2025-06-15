@@ -143,4 +143,16 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // DELETE USER ACCOUNT
+    deleteUserAccount: async () => {
+        try {
+            const response = await axiosInstance.delete("/api/v1/auth/delete-user-account");
+            toast.success(response?.data?.message);
+            set({ authUser: null });
+        } catch (error) {
+            consoleError("deleteUserAccount (auth.store)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    }
+
 }));

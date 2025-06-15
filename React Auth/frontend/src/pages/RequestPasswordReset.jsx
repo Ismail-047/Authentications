@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Mail, ArrowLeft, Info, CheckCircle } from "lucide-react";
-import { useAuthStore } from "../zustand/auth.store";
-import { Link } from "react-router-dom";
-import { ThemeButton } from "../components/Buttons";
-import { Input } from "../components/Inputs";
 import { z } from "zod";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { Input } from "../components/Inputs";
+import { ThemeButton } from "../components/Buttons";
+import { useAuthStore } from "../zustand/auth.store";
+import { Mail, ArrowLeft, Info, CheckCircle } from "lucide-react";
 
 export default function RequestPasswordReset() {
 

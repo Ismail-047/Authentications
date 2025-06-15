@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
-import { ChevronDown, Star, Zap, Shield, Users, ArrowRight, Menu, X } from 'lucide-react';
-import { useAuthStore } from '../zustand/auth.store';
+import { useState, useEffect } from "react";
+import { useAuthStore } from "../zustand/auth.store";
+import { ChevronDown, Star, Zap, Shield, Users, ArrowRight, Menu, X } from "lucide-react";
 
 export default function Home() {
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { logoutUser } = useAuthStore();
+
+    const { logoutUser, deleteUserAccount } = useAuthStore();
+
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50);
         };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const features = [
@@ -42,7 +45,7 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
             {/* Navigation */}
-            <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-lg' : 'bg-transparent'
+            <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-lg" : "bg-transparent"
                 }`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-4">
@@ -56,8 +59,8 @@ export default function Home() {
                             <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
                             <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
                             <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
-                            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
-                                Get Started
+                            <button onClick={deleteUserAccount} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
+                                Delete Account
                             </button>
                             <button onClick={logoutUser} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300">
                                 Logout
@@ -93,8 +96,8 @@ export default function Home() {
             <section className="relative pt-32 pb-20 px-4 overflow-hidden">
                 <div className="absolute inset-0">
                     <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-200/40 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-200/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }}></div>
                 </div>
 
                 <div className="max-w-7xl mx-auto text-center relative z-10">

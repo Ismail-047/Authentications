@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { sendRes } from "../utils/responseHelpers.js";
 import { User } from "../models/user.model.js";
+import { sendRes } from "../utils/responseHelpers.js";
 import { consoleError } from "../utils/comman.utils.js";
 
 /**
@@ -14,24 +14,22 @@ import { consoleError } from "../utils/comman.utils.js";
 export const authenticateToken = (req, res, next) => {
     try {
         const token = req.cookies.token;
-
-        if (!token) return sendRes(res, 202, "Unaurthorized - No token provided."); // Unauthorized
+        if (!token) return sendRes(res, 202, "Unauthorized - No token provided."); // Unauthorized
 
         jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, userInfo) => {
-            if (err) return sendRes(res, 403, "Unaurthorized - Invalid token."); // Forbidden
+            if (err) return sendRes(res, 403, "Unauthorized - Invalid token."); // Forbidden
 
             const { userId } = userInfo;
-
             const user = await User.findById(userId);
-
             if (!user) return sendRes(res, 400, "No user found.");
+
             req.user = user;
 
             next();
         })
-    } catch (error) {
-        consoleError("authenticateToken (authenticateToken.js)", error);
-
+    }
+    catch (error) {
+        consoleError("authenticateToken (auth.middleware.js)", error);
         return sendRes(res, 500, "Something went wrong on our side. Please try again later.")
     }
 }

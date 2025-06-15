@@ -1,23 +1,21 @@
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./zustand/auth.store";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+// PAGES
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
-import { useAuthStore } from "./zustand/auth.store";
 
 export default function App() {
 
+  const pathName = useLocation();
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  const pathName = useLocation();
+  useEffect(() => { checkAuth(); }, [checkAuth]);
   useEffect(() => { window.scrollTo(0, 0); }, [pathName]);
 
   if (isCheckingAuth) return (

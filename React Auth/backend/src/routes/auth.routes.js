@@ -8,13 +8,12 @@ import {
     verifyUserEmail,
     resetUserPassword,
     sendResetPassLink,
-    // deleteUserById,
-    // signupUser2,
+    deleteUserAccount,
     loginWithGoogle,
     signupWithGoogle,
 } from "../controllers/auth.controllers.js";
 // MIDDLEWARES
-import { authenticateToken } from "../middlewares/authenticateToken.js";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -34,6 +33,6 @@ router.patch("/verify-email", verifyUserEmail);
 router.patch("/reset-password", resetUserPassword);
 
 //DELETE REQUESTS
-// router.delete("/delete-user", authenticateToken, deleteUserById);
+router.delete("/delete-user-account", authenticateToken, deleteUserAccount);
 
 export default router;

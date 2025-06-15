@@ -1,12 +1,11 @@
 import { z } from "zod";
-import React, { useState } from "react";
-import { Mail, Lock, User, LogIn } from "lucide-react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { Mail, Lock, User } from "lucide-react";
+import { ThemeButton } from "../components/Buttons";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../zustand/auth.store";
 import { Input, InputPassword } from "../components/Inputs";
-import { ThemeButton } from "../components/Buttons";
-import { toast } from "react-hot-toast";
-
 
 export default function Signup() {
 

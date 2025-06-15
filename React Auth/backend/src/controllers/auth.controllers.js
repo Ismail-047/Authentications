@@ -1,12 +1,11 @@
 import bcryptjs from "bcryptjs";
-// MODELS
 import { User } from "../models/user.model.js";
-// UTILS
-import { generateTokenAndSetCookie, generateVerificationCode, getExpiryTime } from "../utils/auth.utils.js";
+import { sendRes } from "../utils/responseHelpers.js";
 import { consoleError } from "../utils/comman.utils.js";
 import EmailService from "../services/email.service.js";
-import { sendRes } from "../utils/responseHelpers.js";
+import { generateTokenAndSetCookie, generateVerificationCode, getExpiryTime } from "../utils/auth.utils.js";
 
+// CHECK FOR AUTHENTICATED USER
 export const checkAuth = async (req, res) => {
     try {
         const { user } = req;
@@ -60,6 +59,7 @@ export const signupUser = async (req, res) => {
     }
 }
 
+// SIGNUP USER WITH GOOGLE
 export const signupWithGoogle = async (req, res) => {
     try {
         const { email, name, picture, phoneNumber } = req.body;
@@ -109,6 +109,7 @@ export const loginUser = async (req, res) => {
     }
 }
 
+// LOGIN USER WITH GOOGLE
 export const loginWithGoogle = async (req, res) => {
     try {
         const { email } = req.body;
@@ -183,6 +184,7 @@ export const sendResetPassLink = async (req, res) => {
     }
 }
 
+// RESET USER PASSWORD
 export const resetUserPassword = async (req, res) => {
     try {
         const { token, newPassword, confirmNewPassword } = req.body;
@@ -208,6 +210,7 @@ export const resetUserPassword = async (req, res) => {
     }
 }
 
+// LOGOUT USER
 export const logoutUser = async (req, res) => {
     try {
         res.clearCookie("token");
@@ -219,54 +222,18 @@ export const logoutUser = async (req, res) => {
     }
 }
 
+// DELETE USER ACCOUNT
+export const deleteUserAccount = async (req, res) => {
+    try {
+        const { _id: userId } = req.user;
 
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) return sendRes(res, 400, "No user found.");
 
-
-
-
-
-
-
-// // FOR TESTING AND DUMMAY DATA PURPOSE
-// export const signupUser2 = async (req, res) => {
-//     try {
-//         const { userEmail, userPassword, userConfirmPassword } = req.body;
-//         const emailVerificationCode = generateVerificationCode();
-//         await User.create({
-//             userEmail,
-//             userPassword,
-//             emailVerificationCode,
-//             isUserVerified: true,
-//             verificationCodeExpiresAt: getExpiryTime(30),
-//         })
-//         return sendRes(res, 200, "User Created");
-//     }
-//     catch (error) {
-//         logError("signupUser2", error);
-//         return sendRes(res, 500, "Something went wrong on our side. Please! try again.");
-//     }
-// }
-
-
-
-
-
-
-
-// export const deleteUserById = async (req, res) => {
-//     try {
-//         const { _id: userId, userEmail } = req.user;
-
-//         const isDemoAccount = demoAccounts.includes(userEmail);
-//         if (isDemoAccount) return sendRes(res, 404, "This is a Demo account you can not delete it.");
-
-//         const deletedUser = await User.findByIdAndDelete(userId);
-//         if (!deletedUser) return sendRes(res, 400, "No user found.");
-
-//         return sendRes(res, 200, "Account Deleted Successfully.");
-//     }
-//     catch (error) {
-//         logError("deleteUserById", error);
-//         return sendRes(res, 500, "Internal Server Error.")
-//     }
-// }
+        return sendRes(res, 200, "Account Deleted Successfully.");
+    }
+    catch (error) {
+        consoleError("deleteUserAccount (auth.controllers.js)", error);
+        return sendRes(res, 500, "Something went wrong on our side. Please try again later.");
+    }
+}
