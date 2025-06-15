@@ -198,9 +198,10 @@ export default function ResetPassword() {
                     <div className="mt-6 text-center">
                         <p className="text-gray-600 text-sm">
                             Remember your password?{" "}
-                            <button onClick={() => alert("Navigate to login!")} className="text-gray-700 hover:text-gray-900 transition-colors duration-200 hover:underline font-medium">
+                            <Link to="/login"
+                                className="text-gray-700 hover:text-gray-900 transition-colors duration-200 hover:underline font-medium">
                                 Back to Login
-                            </button>
+                            </Link>
                         </p>
                     </div>
 
