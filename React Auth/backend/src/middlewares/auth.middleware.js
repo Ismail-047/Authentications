@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
-import { sendRes } from "../utils/responseHelpers.js";
-import { consoleError } from "../utils/comman.utils.js";
+import { consoleError, sendRes } from "../utils/comman.utils.js";
 
 /**
  * Middleware to authenticate a JSON Web Token (JWT) from cookies.

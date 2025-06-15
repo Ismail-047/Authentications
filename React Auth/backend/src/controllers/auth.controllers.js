@@ -1,8 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { User } from "../models/user.model.js";
-import { sendRes } from "../utils/responseHelpers.js";
-import { consoleError } from "../utils/comman.utils.js";
 import EmailService from "../services/email.service.js";
+import { consoleError, sendRes } from "../utils/comman.utils.js";
 import { generateTokenAndSetCookie, generateVerificationCode, getExpiryTime } from "../utils/auth.utils.js";
 
 // CHECK FOR AUTHENTICATED USER
