@@ -5,9 +5,9 @@ import {
     loginUser,
     logoutUser,
     signupUser,
-    // verifyUserEmail,
-    // resetUserPassword,
-    // sendResetPassLink,
+    verifyUserEmail,
+    resetUserPassword,
+    sendResetPassLink,
     // deleteUserById,
     // signupUser2,
     loginWithGoogle,
@@ -27,11 +27,11 @@ router.get("/check-auth", authenticateToken, checkAuth);
 router.post("/signup", signupUser);
 router.post("/login-with-google", loginWithGoogle);
 router.post("/signup-with-google", signupWithGoogle);
-// router.post("/request-reset-password", sendResetPassLink);
+router.post("/send-reset-password-link", sendResetPassLink);
 
 // PATCH REQUESTS
-// router.patch("/verify-email", verifyUserEmail);
-// router.patch("/reset-password", resetUserPassword);
+router.patch("/verify-email", verifyUserEmail);
+router.patch("/reset-password", resetUserPassword);
 
 //DELETE REQUESTS
 // router.delete("/delete-user", authenticateToken, deleteUserById);

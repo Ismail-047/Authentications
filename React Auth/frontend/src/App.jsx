@@ -8,17 +8,13 @@ import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import { useAuthStore } from "./zustand/auth.store";
-import Cookies from "js-cookie";
 
 export default function App() {
 
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      checkAuth();
-    }
+    checkAuth();
   }, [checkAuth]);
 
   const pathName = useLocation();
@@ -36,7 +32,7 @@ export default function App() {
       <Toaster position="top-right"
         toastOptions={{
           style: { background: "#333", color: "#fff" },
-          duration: 3000,
+          duration: 4000,
         }}
       />
 
@@ -51,9 +47,7 @@ export default function App() {
           element={!authUser ? <Signup /> : <Navigate to="/" replace />}
         />
         <Route path="/verify-email"
-          element={!authUser
-            // && sessionStorage.getItem("email") 
-            ? <VerifyEmail /> : <Navigate to="/" replace />}
+          element={sessionStorage.getItem("email") || !authUser?.isVerified ? <VerifyEmail /> : <Navigate to="/" replace />}
         />
         <Route path="/reset-password"
           element={<ResetPassword />}

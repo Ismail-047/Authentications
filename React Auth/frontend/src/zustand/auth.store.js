@@ -6,6 +6,7 @@ import { consoleError } from "../utils/comman.utils";
 import { auth, googleProvider } from "../lib/firebase";
 
 export const useAuthStore = create((set) => ({
+
     authUser: null,
     setAuthUser: (user) => set({ authUser: user }),
 
@@ -23,6 +24,7 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // SIGNUP USER WITH EMAIL AND PASSWORD
     signupUser: async (email, password, confirmPassword, navigateTo) => {
         try {
             const response = await axiosInstance.post("/api/v1/auth/signup", {
@@ -37,35 +39,7 @@ export const useAuthStore = create((set) => ({
         }
     },
 
-    loginUser: async (email, password, navigateTo) => {
-        try {
-            const response = await axiosInstance.get(`/api/v1/auth/login?email=${email}&password=${password}`);
-            set({ authUser: response?.data?.data });
-            toast.success(response?.data?.message);
-            navigateTo("/");
-        }
-        catch (error) {
-            consoleError("loginUser (auth.store)", error);
-            toast.error(error.response?.data?.message || "Internal Server Error.");
-        }
-    },
-
-    loginWithGoogle: async (navigateTo) => {
-        try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const response = await axiosInstance.post("/api/v1/auth/login-with-google", {
-                email: result?.user?.email,
-            });
-
-            set({ authUser: response?.data?.data });
-            toast.success(response?.data?.message);
-            navigateTo("/");
-        } catch (error) {
-            consoleError("continueWithGoogle (auth.store)", error);
-            toast.error(error.response?.data?.message || "Internal Server Error.");
-        }
-    },
-
+    // SIGNUP USER WITH GOOGLE
     signUpWithGoogle: async (navigateTo) => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
@@ -85,6 +59,79 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // LOGIN USER WITH EMAIL AND PASSWORD
+    loginUser: async (email, password, navigateTo) => {
+        try {
+            const response = await axiosInstance.get(`/api/v1/auth/login?email=${email}&password=${password}`);
+            set({ authUser: response?.data?.data });
+            toast.success(response?.data?.message);
+            navigateTo("/");
+        }
+        catch (error) {
+            consoleError("loginUser (auth.store)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    },
+
+    // LOGIN USER WITH GOOGLE
+    loginWithGoogle: async (navigateTo) => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const response = await axiosInstance.post("/api/v1/auth/login-with-google", {
+                email: result?.user?.email,
+            });
+
+            set({ authUser: response?.data?.data });
+            toast.success(response?.data?.message);
+            navigateTo("/");
+        } catch (error) {
+            consoleError("continueWithGoogle (auth.store)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    },
+
+    // VERIFY USER EMAIL
+    verifyUserEmail: async (email, emailVerificationCode, setIsVerified) => {
+        try {
+            const response = await axiosInstance.patch("/api/v1/auth/verify-email", { email, emailVerificationCode });
+            set({ authUser: response?.data?.data });
+            toast.success(response?.data?.message);
+            sessionStorage.removeItem("email");
+            setIsVerified(true);
+        }
+        catch (error) {
+            consoleError("verifyUserEmail function (zustand)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    },
+
+    // SEND RESET PASSWORD LINK
+    sendResetPassLink: async (email, setIsSuccess) => {
+        try {
+            const response = await axiosInstance.post("/api/v1/auth/send-reset-password-link", { email });
+            toast.success(response?.data?.message);
+            setIsSuccess(true);
+        }
+        catch (error) {
+            consoleError("sendResetPassLink (auth.store)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    },
+
+    // RESET USER PASSWORD
+    resetUserPassword: async (token, newPassword, confirmNewPassword, setIsSuccess) => {
+        try {
+            const response = await axiosInstance.patch("/api/v1/auth/reset-password", { token, newPassword, confirmNewPassword });
+            toast.success(response?.data?.message);
+            setIsSuccess(true);
+        }
+        catch (error) {
+            consoleError("resetUserPassword (auth.store)", error);
+            toast.error(error.response?.data?.message || "Internal Server Error.");
+        }
+    },
+
+    // LOGOUT USER
     logoutUser: async () => {
         try {
             const response = await axiosInstance.get("/api/v1/auth/logout");

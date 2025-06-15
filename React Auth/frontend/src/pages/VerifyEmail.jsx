@@ -1,18 +1,20 @@
 import React, { useState, useRef } from "react";
-import { Mail, Check, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, ArrowLeft, CheckCircle, Info } from "lucide-react";
 import { ThemeButton } from "../components/Buttons";
 import { Link } from "react-router-dom";
-
+import { useAuthStore } from "../zustand/auth.store";
 
 export default function VerifyEmail() {
 
-    const [code, setCode] = useState(["", "", "", "", "", ""]);
+    const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
-    const [error, setError] = useState("");
+    const [code, setCode] = useState(["", "", "", "", "", ""]);
 
     const inputRefs = useRef([]);
-    const email = "john@example.com"; // This would come from props or context
+    const email = sessionStorage.getItem("email");
+
+    const { verifyUserEmail } = useAuthStore();
 
 
     const handleCodeChange = (index, value) => {
@@ -27,9 +29,8 @@ export default function VerifyEmail() {
         if (value && index < 5) inputRefs.current[index + 1]?.focus();
 
         // Auto-verify when all fields are filled
-        if (newCode.every(digit => digit !== "") && newCode.join("").length === 6) {
-            handleVerify(newCode.join(""));
-        }
+        if (newCode.every(digit => digit !== "") && newCode.join("").length === 6)
+            handleVerifyEmail(newCode.join(""));
     };
 
     const handleKeyDown = (index, e) => {
@@ -40,7 +41,7 @@ export default function VerifyEmail() {
 
         // Handle paste
         if (e.key === "Enter") {
-            handleVerify(code.join(""));
+            handleVerifyEmail(code.join(""));
         }
     };
 
@@ -51,11 +52,11 @@ export default function VerifyEmail() {
         if (pastedData.length === 6) {
             const newCode = pastedData.split("");
             setCode(newCode);
-            handleVerify(pastedData);
+            handleVerifyEmail(pastedData);
         }
     };
 
-    const handleVerify = async (verificationCode = code.join("")) => {
+    const handleVerifyEmail = async (verificationCode = code.join("")) => {
         if (verificationCode.length !== 6) {
             setError("Please enter a 6-digit verification code");
             return;
@@ -63,19 +64,8 @@ export default function VerifyEmail() {
 
         setIsLoading(true);
         setError("");
-
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-            // Simulate success/failure
-            if (verificationCode === "123456") {
-                setIsVerified(true);
-            } else {
-                setError("Invalid verification code. Please try again.");
-                setCode(["", "", "", "", "", ""]);
-                inputRefs.current[0]?.focus();
-            }
-        }, 2000);
+        await verifyUserEmail(email, verificationCode, setIsVerified);
+        setIsLoading(false);
     };
 
     return (
@@ -99,31 +89,29 @@ export default function VerifyEmail() {
                             Your email has been successfully verified. You can now access your account.
                         </p>
 
-                        <Link to="/dashboard"
-                            onClick={() => alert("Navigate to dashboard!")}
-                            className="w-full inline-flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-                        >
+                        <Link to="/" className="w-full inline-flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
                             Continue to Dashboard
                         </Link>
+
                     </div>
                 ) : (
-                    <form onSubmit={handleVerify} className="animate-themeAnimationLg backdrop-blur-lg bg-white/80 border border-gray-200 rounded-3xl p-8 shadow-2xl">
+                    <form className="animate-themeAnimationLg backdrop-blur-lg bg-white/80 border border-gray-200 rounded-3xl p-8 shadow-2xl">
 
                         {/* BACK BUTTON */}
                         <Link to="/signup"
-                            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 mb-6 text-sm">
+                            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 mb-3 text-sm">
                             <ArrowLeft className="w-4 h-4" />
                             Back to signup
                         </Link>
 
                         {/* HEADER */}
-                        <div className="text-center mb-8">
+                        <div className="text-center mb-4">
 
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl mb-4">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl mb-3">
                                 <Mail className="w-8 h-8 text-white" />
                             </div>
 
-                            <h1 className="text-3xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold text-gray-900 mb-1 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
                                 Verify Your Email
                             </h1>
 
@@ -168,11 +156,16 @@ export default function VerifyEmail() {
                             )}
                         </div>
 
+                        <div className="text-gray-600 text-sm mb-6 bg-gray-100 pl-3 pr-5 py-3 rounded-lg flex gap-2.5 mx-4 border-l-4 border-gray-500">
+                            <Info /> Don’t forget to check your spam or junk folder in case our email ended up there!
+                        </div>
+
                         {/* VERIFY BUTTON */}
                         <div>
                             <ThemeButton
                                 btnLabel="Verify Email"
                                 isButtonLoading={isLoading}
+                                onClick={handleVerifyEmail}
                                 loadingLabel="Verifying..."
                                 icon={<Mail className="w-6 h-6 text-white/90" />}
                                 extraClasses="mt-7"

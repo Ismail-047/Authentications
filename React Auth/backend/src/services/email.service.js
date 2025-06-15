@@ -54,7 +54,7 @@ class EmailService {
         return await this.transporter.sendMail(mailOptions);
     }
 
-    async sendResetPasswordEmail(to, resetLink) {
+    async sendResetPasswordLink(to, resetLink) {
         const mailOptions = {
             from: `"Authentication Service" <${process.env.NODEMAILER_EMAIL}>`,
             to,

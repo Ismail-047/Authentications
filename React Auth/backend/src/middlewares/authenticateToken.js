@@ -15,7 +15,7 @@ export const authenticateToken = (req, res, next) => {
     try {
         const token = req.cookies.token;
 
-        if (!token) return sendRes(res, 401, "Unaurthorized - No token provided."); // Unauthorized
+        if (!token) return sendRes(res, 202, "Unaurthorized - No token provided."); // Unauthorized
 
         jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, userInfo) => {
             if (err) return sendRes(res, 403, "Unaurthorized - Invalid token."); // Forbidden
@@ -32,6 +32,6 @@ export const authenticateToken = (req, res, next) => {
     } catch (error) {
         consoleError("authenticateToken (authenticateToken.js)", error);
 
-        return sendRes(res, 500, "Internal Server Error.")
+        return sendRes(res, 500, "Something went wrong on our side. Please try again later.")
     }
 }
